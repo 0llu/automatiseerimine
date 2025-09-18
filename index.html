@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<title>🚀 Docker Kodune Töö 🚀</title>
+<style>
+  body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle, #1a2a6c, #b21f1f, #fdbb2d);
+      color: #fff;
+      transition: background 1s;
+  }
+  h1 {
+      font-size: 4em;
+      text-shadow: 0 0 20px #00ffe7, 0 0 40px #ff0080;
+      animation: glow 2s infinite alternate;
+      margin: 20px;
+      text-align: center;
+  }
+  @keyframes glow {
+      from { text-shadow: 0 0 10px #00ffe7, 0 0 20px #ff0080; }
+      to   { text-shadow: 0 0 30px #00ffe7, 0 0 60px #ff0080; }
+  }
+  #clock {
+      font-size: 2em;
+      margin-bottom: 30px;
+  }
+  button {
+      background: #fff;
+      color: #333;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+  }
+  button:hover {
+      background: #ff0080;
+      color: #fff;
+      transform: scale(1.1);
+  }
+  canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+  }
+</style>
+</head>
+<body>
+  <h1>🚀 Docker Kodune Töö 🚀</h1>
+  <div id="clock"></div>
+  <button onclick="toggleTheme()">Vaheta teemat</button>
+  <canvas id="stars"></canvas>
+
+<script>
+// Kell + kuupäev
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').innerText =
+      now.toLocaleDateString('et-EE') + " " + now.toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Täheline taust
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const stars = Array.from({length: 300}, () => ({
+  x: Math.random()*canvas.width,
+  y: Math.random()*canvas.height,
+  r: Math.random()*2,
+  dx: (Math.random()-0.5)*0.7,
+  dy: (Math.random()-0.5)*0.7
+}));
+
+function animateStars() {
+  ctx.fillStyle = "rgba(0,0,0,0.3)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle="#fff";
+    ctx.fill();
+    s.x+=s.dx; s.y+=s.dy;
+    if(s.x<0||s.x>canvas.width) s.dx*=-1;
+    if(s.y<0||s.y>canvas.height) s.dy*=-1;
+  });
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+
+// Teema vahetamine
+let dark = true;
+function toggleTheme() {
+  if(dark){
+    document.body.style.background = "linear-gradient(120deg,#00c6ff,#0072ff)";
+  } else {
+    document.body.style.background = "radial-gradient(circle,#1a2a6c,#b21f1f,#fdbb2d)";
+  }
+  dark=!dark;
+}
+</script>
+</body>
+</html>
