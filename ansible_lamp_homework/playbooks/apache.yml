@@ -1,0 +1,33 @@
+- name: Apache setup
+  hosts: lamp_servers
+  become: yes
+
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Enable modules
+      apache2_module:
+        state: present
+        name: "{{ item }}"
+      loop:
+        - rewrite
+        - ssl
+        - headers
+
+    - name: Deploy vhost template
+      template:
+        src: ../templates/vhost.conf.j2  # tee korrektne path
+        dest: /etc/apache2/sites-available/000-default.conf
+      notify:
+        - restart apache
+
+  handlers:
+    - name: restart apache
+      service:
+        name: apache2
+        state: restarted
+

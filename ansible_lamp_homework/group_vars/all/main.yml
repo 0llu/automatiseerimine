@@ -1,0 +1,4 @@
+student_username: "student"
+server_ip: "192.168.30.89"
+domain_name: "lamp.local"
+mysql_root_pass: "TeieValitudParool"

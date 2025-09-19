@@ -1,0 +1,9 @@
+<?php
+phpinfo();
+$mysqli = new mysqli("localhost", "root", "{{ mysql_root_pass }}", "mysql");
+if ($mysqli->connect_error) {
+    echo "MySQL connection failed: " . $mysqli->connect_error;
+} else {
+    echo "MySQL connection successful!";
+}
+?>

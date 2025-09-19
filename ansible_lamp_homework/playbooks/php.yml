@@ -1,0 +1,17 @@
+- name: PHP setup
+  hosts: lamp_servers
+  become: yes
+  tasks:
+    - name: Install PHP and extensions
+      apt:
+        name:
+          - php
+          - php-mysql
+        state: present
+        update_cache: yes
+
+    - name: Deploy index.php
+      template:
+        src: index.php.j2
+        dest: /var/www/html/index.php
+      notify: restart apache
