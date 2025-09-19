@@ -1,0 +1,22 @@
+- name: MySQL setup
+  hosts: lamp_servers
+  become: yes
+  vars_prompt:
+    - name: mysql_root_pass
+      prompt: "Enter MySQL root password"
+      private: yes
+  tasks:
+    - name: Install MySQL server
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
+
+    - name: Ensure MySQL root password is set
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_pass }}"
+        name: root
+        password: "{{ mysql_root_pass }}"
+        host_all: yes
+        state: present
