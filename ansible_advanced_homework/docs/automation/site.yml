@@ -1,0 +1,54 @@
+---
+- name: "Web server with Vault and Templates"
+  hosts: all
+  become: yes
+  vars:
+    web_root: "/var/www/html"
+    service_name: "apache2"
+
+  tasks:
+    - name: "Install Apache web server"
+      package:
+        name: "{{ service_name }}"
+        state: present
+      notify: "start apache"
+
+    - name: "Create web directory"
+      file:
+        path: "{{ web_root }}"
+        state: directory
+        mode: '0755'
+
+    - name: "Generate HTML page from template"
+      template:
+        src: index.html.j2
+        dest: "{{ web_root }}/index.html"
+        mode: '0644'
+      notify: "restart apache"
+
+    - name: "Create server info file"
+      copy:
+        content: |
+          Server: {{ ansible_hostname }}
+          Student: {{ vault_student_name }}
+          MySQL Password Length: {{ vault_mysql_password | length }}
+          Generated: {{ ansible_date_time.iso8601 }}
+        dest: "{{ web_root }}/server-info.txt"
+        mode: '0644'
+
+    - name: "Ensure Apache is running"
+      service:
+        name: "{{ service_name }}"
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: "start apache"
+      service:
+        name: "{{ service_name }}"
+        state: started
+
+    - name: "restart apache"
+      service:
+        name: "{{ service_name }}"
+        state: restarted

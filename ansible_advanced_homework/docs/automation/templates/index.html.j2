@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ vault_website_title }}</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Tere tulemast {{ vault_student_name }} veebiserverisse!</h1>
+    <p>Serveri nimi: {{ ansible_hostname }}</p>
+    <p>Aeg: {{ ansible_date_time.iso8601 }}</p>
+    <p>Administraatori e-post: {{ admin_email }}</p>
+    <p>API võti (näidatud osaliselt): {{ vault_api_key[:6] }}******</p>
+    <hr>
+    <footer>
+        <small>Automatiseeritud Ansible'iga 🚀</small>
+    </footer>
+</body>
+</html>

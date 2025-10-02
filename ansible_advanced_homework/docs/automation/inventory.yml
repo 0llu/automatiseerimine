@@ -1,0 +1,8 @@
+all:
+  hosts:
+    webserver:
+      ansible_host: localhost
+      ansible_connection: local
+  vars:
+    server_name: "my-web-server"
+    admin_email: "admin@example.com"
