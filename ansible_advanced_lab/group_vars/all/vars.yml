@@ -1,0 +1,10 @@
+app_name: "advanced-lamp"
+app_version: "1.0.0"
+admin_email: "admin@company.com"
+
+apache_package: "{% if ansible_os_family == 'Debian' %}apache2{% else %}httpd{% endif %}"
+mysql_package: "{% if ansible_os_family == 'Debian' %}mysql-server{% else %}mariadb-server{% endif %}"
+
+backup_enabled: "{{ app_env == 'production' }}"
+monitoring_enabled: "{{ app_env == 'production' }}"
+log_level: "{% if debug_mode %}DEBUG{% else %}INFO{% endif %}"

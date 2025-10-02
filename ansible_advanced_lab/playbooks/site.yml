@@ -1,0 +1,67 @@
+---
+- name: "LAMP Stack Deployment with Advanced Configuration"
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: "Update package cache"
+      package:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: "Install Apache"
+      package:
+        name: "{{ apache_package }}"
+        state: present
+      notify:
+        - "start apache"
+        - "enable apache"
+
+    - name: "Create virtual host directories"
+      file:
+        path: "{{ item.document_root }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+      loop: "{{ virtual_hosts }}"
+      when: virtual_hosts is defined
+
+    - name: "Generate virtual host configurations"
+      template:
+        src: apache_vhost.conf.j2
+        dest: "/etc/apache2/sites-available/{{ item.name }}.conf"
+        backup: yes
+      loop: "{{ virtual_hosts }}"
+      notify: "reload apache"
+      when: virtual_hosts is defined
+
+    - name: "Enable virtual hosts"
+      command: "a2ensite {{ item.name }}"
+      args:
+        creates: "/etc/apache2/sites-enabled/{{ item.name }}.conf"
+      loop: "{{ virtual_hosts }}"
+      notify: "reload apache"
+      when: virtual_hosts is defined
+
+  handlers:
+    - name: "start apache"
+      service:
+        name: "{{ apache_package }}"
+        state: started
+
+    - name: "enable apache"
+      service:
+        name: "{{ apache_package }}"
+        enabled: yes
+
+    - name: "reload apache"
+      service:
+        name: "{{ apache_package }}"
+        state: reloaded
+
+    - name: "restart apache"
+      service:
+        name: "{{ apache_package }}"
+        state: restarted

@@ -1,0 +1,25 @@
+# {{ ansible_managed }}
+# MySQL Configuration for {{ inventory_hostname }}
+# Environment: {{ app_env }}
+
+[mysqld]
+port = {{ mysql_port }}
+bind-address = {{ mysql_bind_address }}
+innodb_buffer_pool_size = {{ mysql_innodb_buffer_pool_size }}
+max_connections = {{ mysql_max_connections }}
+
+{% if app_env == 'production' %}
+innodb_flush_log_at_trx_commit = 1
+sync_binlog = 1
+{% else %}
+innodb_flush_log_at_trx_commit = 2
+sync_binlog = 0
+{% endif %}
+
+{% if debug_mode %}
+general_log = 1
+general_log_file = /var/log/mysql/general.log
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/slow.log
+long_query_time = 1
+{% endif %}

@@ -1,0 +1,19 @@
+# MySQL konfigureerimine
+mysql_root_user: "root"
+mysql_bind_address: "127.0.0.1"
+mysql_max_connections: 100
+
+# Dünaamiline buffer pool arvutamine
+mysql_innodb_buffer_pool_size: "{{ (ansible_memtotal_mb * 0.7) | int }}M"
+
+# Andmebaasid
+mysql_databases:
+  - name: "{{ app_name }}_{{ app_env }}"
+    encoding: "utf8mb4"
+    collation: "utf8mb4_unicode_ci"
+
+mysql_users:
+  - name: "{{ app_name }}_user"
+    host: "localhost"
+    priv: "{{ app_name }}_{{ app_env }}.*:ALL"
+    # Parool tuleb vault'ist
