@@ -1,0 +1,12 @@
+---
+- name: Development Environment
+  hosts: dev_servers
+  become: yes
+  roles:
+    - role: nginx
+      vars:
+        nginx_workers: 1
+        nginx_hostname: "dev.local"
+        nginx_environment: "development"
+        site_title: "Development Environment"
+        site_color: "#FFA500"

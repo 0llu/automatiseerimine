@@ -1,0 +1,7 @@
+---
+nginx_workers: "{{ ansible_processor_vcpus | default(2) }}"
+nginx_port: 80
+nginx_hostname: "localhost"
+nginx_environment: "unknown"
+site_title: "Web Server"
+site_color: "#CCCCCC"

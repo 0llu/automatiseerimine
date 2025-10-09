@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ site_title }}</title>
+  <style>
+    body { background: {{ site_color }}; font-family: Arial; text-align: center; padding: 50px; }
+  </style>
+</head>
+<body>
+  <h1>{{ site_title }}</h1>
+  <p>Environment: {{ nginx_environment }}</p>
+  <p>Workers: {{ nginx_workers }}</p>
+  <p>Port: {{ nginx_port }}</p>
+</body>
+</html>
