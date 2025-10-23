@@ -1,0 +1,2 @@
+Tere, Terraform!
+See fail on loodud IaC-ga.
