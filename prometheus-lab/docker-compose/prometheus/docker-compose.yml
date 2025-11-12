@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor-net
+
+  python-app:
+    build: ./python-app
+    container_name: python-app
+    ports:
+      - "5001:5001"
+    networks:
+      - monitor-net
+
+  nodeexporter:
+    image: prom/node-exporter:latest
+    container_name: nodeexporter
+    network_mode: host
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+
+networks:
+  monitor-net:
+    driver: bridge
+
