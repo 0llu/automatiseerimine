@@ -1,0 +1,22 @@
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Build Docker image
+      docker_image:
+        build: ../loputoo-rain
+        name: rain-app
+        tag: latest
+
+    - name: Stop existing container
+      docker_container:
+        name: rain-app
+        state: absent
+        force_kill: yes
+
+    - name: Run container
+      docker_container:
+        name: rain-app
+        image: rain-app:latest
+        state: started
+        ports:
+          - "5000:5000"

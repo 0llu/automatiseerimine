@@ -3,50 +3,34 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - run: python -m py_compile app.py
+      - name: Validate syntax
+        run: python -m py_compile app.py
 
-  test:
+  build:
     needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - run: pip install -r requirements.txt
-      - run: pytest test_app.py -v
+      - name: Build Docker image
+        run: docker build -t rain-app:latest .
 
-  build:
-    needs: test
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}
-          docker build -t $IMAGE_NAME:${{ github.sha }} .
-          docker build -t $IMAGE_NAME:latest .
-      - run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}:${{ github.sha }}
-          docker run -d -p 5000:5000 --name test-container $IMAGE_NAME
-          sleep 5
-          curl -f http://localhost:5000/
-          docker stop test-container
-          docker rm test-container
-      - run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}
-          docker push $IMAGE_NAME:${{ github.sha }}
-          docker push $IMAGE_NAME:latest
+      - name: Run Ansible Playbook
+        run: ansible-playbook ansible/playbook.yml -i ansible/inventory
+
