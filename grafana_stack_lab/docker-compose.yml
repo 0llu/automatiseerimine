@@ -58,7 +58,7 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4318
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
     ports:
-      - "8181:8181"
+      - "8181:8080"
     labels:
       logging: "promtail"
     networks:
