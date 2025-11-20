@@ -21,7 +21,7 @@ Automatiseeritud deploy Docker containerisse.
 
 ## Käivitamine
 ```bash
-git clone git@github.com:USERNAME/automatiseerimine.git
+git clone git@github.com:0llu/automatiseerimine.git
 cd loputoo-rain
 python3 -m venv venv
 source venv/bin/activate
