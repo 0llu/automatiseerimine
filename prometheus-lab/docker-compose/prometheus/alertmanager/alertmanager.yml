@@ -1,0 +1,8 @@
+route:
+  receiver: 'slack-alerts'
+
+receivers:
+  - name: 'slack-alerts'
+    slack_configs:
+      - api_url: "SIIA SINA LISAD WEBHOOK URL"
+        channel: "#prometheus-alerts"

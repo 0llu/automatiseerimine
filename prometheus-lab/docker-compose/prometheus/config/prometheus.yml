@@ -2,6 +2,15 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
+  rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
@@ -13,4 +22,12 @@ scrape_configs:
   - job_name: 'python-app'
     static_configs:
       - targets: ['10.0.81.105:5001']
+
+  - job_name: 'docker-engine'
+    static_configs:
+      - targets: ['localhost:9323']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
 
