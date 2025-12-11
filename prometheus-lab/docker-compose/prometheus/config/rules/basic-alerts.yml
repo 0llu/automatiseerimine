@@ -7,5 +7,25 @@ groups:
         labels:
           severity: critical
         annotations:
-          summary: "Instance down!"
-          description: "{{ $labels.instance }} pole 1 minut jõudnud vastata!"
+          summary: "Instance {{ $labels.instance }} on maas"
+          description: "{{ $labels.job }}/{{ $labels.instance }} ei vasta üle 1 minuti."
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kõrge CPU kasutus"
+          description: "CPU kasutus on {{ $value | humanize }}% üle 2 minuti."
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kõrge mälu kasutus"
+          description: "Mälu kasutus on {{ $value | humanize }}%"
+
+

@@ -38,11 +38,16 @@ services:
       - /dev/disk/:/dev/disk:ro
 
   alertmanager:
-    image: prom/alertmanager
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    volumes:
+      - ../../alertmanager:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
     ports:
       - "9093:9093"
-    volumes:
-      - ./alertmanager:/etc/alertmanager
+    restart: unless-stopped
+
 
   grafana:
     image: grafana/grafana
